@@ -1,0 +1,8 @@
+{
+  "development": {
+    "MONGODB_URI": "mongodb+srv://tonio:jS4ODY2k69TC2kEr@playground-hox8j.gcp.mongodb.net/messages?retryWrites=true",
+    "PORT": 8080,
+    "SUPERID": "5c5c78180490ba38efa7bd12",
+    "SECRET": "girogirotondocascailmondo"
+  }
+}
