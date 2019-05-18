@@ -9,6 +9,8 @@ const graphql = require('express-graphql');
 
 const graphqlSchema = require('./graphql/schema');
 const graphqlResolver = require('./graphql/resolvers');
+const auth = require('./middleware/auth');
+const { clearImage } = require('./util/file');
 
 const app = express();
 
@@ -41,6 +43,17 @@ app.use((req, res, next) => {
   if (req.method === 'OPTIONS') return res.sendStatus(200);
   next();
 });
+
+app.use(auth);
+
+app.put('/upload-image', (req, res, next) => {
+  if (!req.isAth) throw new Error('Not authenticated');
+  if (!req.file) return res.status(200).json({ message: 'No file provided' });
+  
+  if (req.body.oldPath) clearImage(req.body.oldPath);
+
+  return res.status(201).json({ message: 'File uploaded', filePath: req.file.path });
+})
 
 app.use('/graphql', graphql({
   schema: graphqlSchema,

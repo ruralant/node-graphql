@@ -5,6 +5,7 @@ const { validationResult } = require('express-validator/check');
 const io = require('../socket');
 const Post = require('../models/post');
 const User = require('../models/user');
+const { clearImage } = require('./util/file');
 
 exports.getPosts = async (req, res, next) => {
   try {
@@ -173,8 +174,3 @@ exports.deletePost = async (req, res, next) => {
     next(e);
   }
 }
-
- const clearImage = filePath => {
-   filePath = path.join(__dirname, '../', filePath);
-   fs.unlink(filePath, e => console.log(e));
- }
