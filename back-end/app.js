@@ -1,11 +1,17 @@
 require('./config/config');
 
+const fs = require('fs');
+const path = require('path');
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const multer = require('multer');
-const path = require('path');
 const graphql = require('express-graphql');
+const helmet = require('helmet');
+const compression = require('compression');
+const morgan = require('morgan');
+
 
 const graphqlSchema = require('./graphql/schema');
 const graphqlResolver = require('./graphql/resolvers');
@@ -67,6 +73,14 @@ app.use('/graphql', graphql({
     return { message, status: code, data };
   }
 }))
+
+const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), {
+  flags: 'a'
+});
+
+app.use(helmet());
+app.use(compression());
+app.use(morgan('combined', { stream: accessLogStream }));
 
 app.use((error, req, res, next) => {
   console.log(error);
